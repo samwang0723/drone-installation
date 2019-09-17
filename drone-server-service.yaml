@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: drone-service
+  namespace: drone
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: https
+    external-dns.alpha.kubernetes.io/hostname: "drone.samwang0723.com"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "e0ff03b5-55fe-418f-a6c2-0bb258af9e99"
+spec:
+  type: LoadBalancer
+  # type: NodePort
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 8000
+  - name: https
+    port: 443
+    targetPort: 8000
+    protocol: TCP
+  - name: grpc
+    protocol: TCP
+    port: 9000
+    targetPort: 9000
+  selector:
+    app: drone-server
